@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Template • TodoMVC</title>
+		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<!-- CSS overrides - remove if you don't need it -->
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+	<!--设置angular的作用范围 ng-app ng-controller-->
+		<section class="todoapp" ng-app="todoApp" ng-controller="todoCtrl">
+			<header class="header">
+				<h1>{{text}}</h1>
+				<!--添加一个form表单提交，目的：点击enter时，可以新增-->
+				<form ng-submit="todoAdd()">
+				<input ng-model="todoText" class="new-todo" placeholder="What needs to be done?" autofocus>
+				</form>
+			</header>
+			<!-- This section should be hidden by default and shown when there are todos -->
+			<section class="main">
+				<input ng-model="isToggleAll" ng-click="changeToggleAll()" id="toggle-all" class="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul class="todo-list">
+					<!-- These are here just to show the structure of the list items -->
+					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+					<!--<li class="completed">-->
+						<!--<div class="view">-->
+							<!--<input class="toggle" type="checkbox" checked>-->
+							<!--<label>Taste JavaScript</label>-->
+							<!--<button class="destroy"></button>-->
+						<!--</div>-->
+						<!--<input class="edit" value="Create a TodoMVC template">-->
+					<!--</li>-->
+
+					<!--ng-class控制样式-->
+					<!--todo：每一项是一个对象-->
+					<!--加入自定义指令autoFoucs-->
+					<li
+						my-focus
+						ng-repeat="todo in todoList |filter:statusFilter"
+						ng-class="{'completed':todo.status,'editing':todo==todoEditText}">
+						<div class="view">
+							<input class="toggle" type="checkbox" ng-model="todo.status">
+							<!--ng-dblclick="todoEdit()向控制器传入参数todo-->
+							<label ng-bind="todo.text" ng-dblclick="todoEdit(todo)"></label>
+							<!--ng-click="todoDelete()向控制器传入参数$index-->
+							<button class="destroy" ng-click="todoDelete($index)"></button>
+						</div>
+						<!--切换到编辑框时，显示的是之前列表的信息-->
+						<!--ng-submit 点击enter触发事件-->
+						<form ng-submit="todoBlur()">
+							<input class="edit" ng-model="todo.text" ng-blur="todoBlur()">
+						</form>
+
+					</li>
+				</ul>
+			</section>
+			<!-- This footer should hidden by default and shown when there are todos -->
+			<footer class="footer">
+				<!-- This should be `0 items left` by default -->
+				<span class="todo-count"><strong>{{todoCount}}</strong> item left</span>
+				<!-- Remove this if you don't implement routing -->
+				<ul class="filters">
+					<li>
+						<a class="selected" href="#/" ng-click="changeStatus({})">All</a>
+					</li>
+					<li>
+						<a href="#/active" ng-click="changeStatus({status:false})">Active</a>
+					</li>
+					<li>
+						<a href="#/completed" ng-click="changeStatus({status:true})">Completed</a>
+					</li>
+				</ul>
+				<!-- Hidden if no completed items are left ↓ -->
+				<button ng-show='isShowClearCompleted' ng-click="clearCompleted()" class="clear-completed">Clear completed</button>
+			</footer>
+		</section>
+		<footer class="info">
+			<p>Double-click to edit a todo</p>
+			<!-- Remove the below line ↓ -->
+			<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
+			<!-- Change this out with your name and url ↓ -->
+			<p>Created by <a href="http://todomvc.com">you</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+		<!-- Scripts here. Don't remove ↓ -->
+		<!--<script src="node_modules/todomvc-common/base.js"></script>-->
+		<script src="./node_modules/angular/angular.js"></script>
+		<script src="./js/app.js"></script>
+	<!--注意其他模块的js也要引入，不是只要引入主模块就行了-->
+		<script src="./js/controller.js"></script>
+	<script src="./js/directive.js"></script>
+	</body>
+</html>
